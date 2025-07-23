@@ -26,9 +26,11 @@ jobs:
           pip install -r requirements.txt
           pip install pytest pytest-cov
 
-      - name: Run Tests with Coverage
+      - name: Run tests with coverage
         run: |
+          export PYTHONPATH="${{ github.workspace }}"
           pytest --cov=app --cov-report=xml
+
 
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@v2
