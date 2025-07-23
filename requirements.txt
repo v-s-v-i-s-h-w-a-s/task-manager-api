@@ -1,7 +1,5 @@
 fastapi
 uvicorn
-httpx
 pytest
 pytest-cov
-sqlalchemy
-pydantic
+requests
