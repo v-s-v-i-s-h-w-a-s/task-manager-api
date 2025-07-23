@@ -1,4 +1,4 @@
-name: SonarCloud Analysis
+name: SonarCloud Scan
 
 on:
   push:
@@ -9,14 +9,13 @@ on:
 
 jobs:
   sonarqube:
-    name: SonarCloud Quality Analysis
+    name: SonarCloud Quality Scan
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Required for SonarCloud to detect branches properly
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -25,22 +24,20 @@ jobs:
 
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip
           pip install -r requirements.txt
           pip install pytest pytest-cov
 
-      - name: Run tests with coverage
+      - name: Run Tests with Coverage
         run: |
-          pytest --cov=app --cov-report=xml --cov-report=html
+          PYTHONPATH=. pytest --cov=app --cov-report=xml --cov-report=html
 
       - name: SonarCloud Scan
         uses: SonarSource/sonarqube-scan-action@v5
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
-      - name: Upload HTML Coverage Report
-        if: always()
+      - name: Upload HTML Coverage Report (optional)
         uses: actions/upload-artifact@v4
         with:
-          name: html-coverage-report
+          name: html-coverage
           path: htmlcov/
